@@ -1,6 +1,11 @@
 My Ubuntu Server Script
 Overview
 This script aim to automate the setup of an Ubuntu 22(0).04 server, including package updates, temporary enablement of password authentication for SSH, and the creation of a new sudo user.
+
+Download
+
+    curl -O https://raw.githubusercontent.com/Akouniza/U22.04-Server-Setup/main/server_setup.sh
+
 Features
 
     Updates package list and upgrades installed packages.
