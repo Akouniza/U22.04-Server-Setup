@@ -110,6 +110,27 @@ configure_ntp() {
     fi
 }
 
+# Function to allow or delete UFW rules
+ufw_allow_delete_rule() {
+    echo -e "${CYAN}Enter the IP address (theip) to allow or delete rule (e.g., 192.168.1.1): ${NC}"
+    read -p "" IP_ADDRESS
+    echo -e "${CYAN}Enter the corresponding port (thecorresponding port) to allow or delete rule (e.g., 22): ${NC}"
+    read -p "" PORT
+
+    echo -e "${CYAN}Do you want to allow or delete the UFW rule? (allow/delete): ${NC}"
+    read -p "" ACTION
+
+    if [[ "${ACTION}" == "allow" ]]; then
+        sudo ufw allow from "${IP_ADDRESS}/32" to any port "${PORT}"
+        echo -e "${GREEN}UFW rule allowing access from ${IP_ADDRESS} to port ${PORT} added!${NC}"
+    elif [[ "${ACTION}" == "delete" ]]; then
+        sudo ufw delete allow from "${IP_ADDRESS}/32" to any port "${PORT}"
+        echo -e "${GREEN}UFW rule allowing access from ${IP_ADDRESS} to port ${PORT} deleted!${NC}"
+    else
+        echo -e "${RED}Invalid action. Please choose 'allow' or 'delete'.${NC}"
+    fi
+}
+
 # Display menu for setup and additional options
 echo -e "${YELLOW}Select an option:${NC}"
 echo -e "  ${CYAN}1) Setup Server${NC}"
@@ -120,6 +141,7 @@ echo -e "  ${CYAN}5) Backup Files or Directories${NC}"
 echo -e "  ${CYAN}6) Generate SSH Key Pair (Ed25519)${NC}"
 echo -e "  ${CYAN}7) Configure Automatic Updates${NC}"
 echo -e "  ${CYAN}8) Configure NTP${NC}"
+echo -e "  ${CYAN}9) Allow or Delete UFW Rule${NC}"
 
 echo -e "${CYAN}Enter the number of your choice: ${NC}"
 read -p "" CHOICE
@@ -156,6 +178,10 @@ case "$CHOICE" in
     8)
         # Configure NTP
         configure_ntp
+        ;;
+    9)
+        # Allow or Delete UFW Rule
+        ufw_allow_delete_rule
         ;;
     *)
         echo -e "${RED}Invalid choice.${NC}"
